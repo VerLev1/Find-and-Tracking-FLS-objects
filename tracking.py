@@ -2,15 +2,12 @@
 
 
 import cv2
-# import pandas as pd
 import numpy as np
 import munkres
-# import importlib
-import objDetect
 import track
 
 
-class tracking:
+class Tracking:
 
     def __init__(self):
         self.tracks = []  # list of track objects
@@ -19,12 +16,13 @@ class tracking:
         self.id = 1
         self.proccesNum = 0  # this will tell us how many times the whole proccess ocoured.
 
-    def addNextFrameFeatures(self, mask, centroids, bboxes, circles, targetRate):
+    def addNextFrameFeatures(self,img, mask, centroids, bboxes, circles, targetRate):
         self.bboxes = bboxes
         self.mask = mask
         self.centroids = centroids
         self.circles = circles
         self.targetRate = targetRate
+        self.img=img
 
     def predictNewLocations(self):
         for t in self.tracks:
@@ -135,7 +133,7 @@ class tracking:
 
         # create the track objects:
         for i in range(unasDet[0]):
-            self.tracks.append(track.track(circles[i], self.id, bboxes[i], centroids[i], targetRate[i]))
+            self.tracks.append(track.track(self.circles[i], self.id, bboxes[i], centroids[i], targetRate[i]))
             self.id += 1
 
         self.proccesNum = self.proccesNum + 1
@@ -144,27 +142,6 @@ class tracking:
         for t in self.tracks:
             p1 = (int(t.bbox[0]), int(t.bbox[1]))
             p2 = (int(t.bbox[0]) + int(t.bbox[2]), int(t.bbox[1]) + int(t.bbox[3]))
-            cv2.rectangle(img1, p1, p2, t.color, 2, 1)
-        cv2.imshow('tracking', img1)
+            cv2.rectangle(self.img, p1, p2, t.color, 2, 1)
+        cv2.imshow('tracking', self.img)
         cv2.waitKey(0)
-
-
-### the procces starts here ###
-t = tracking()
-for i in range(136, 152):
-    # reading the frame
-    name = 'images/try' + str(i) + '.jpg'
-    img1 = cv2.imread(name)
-    img = cv2.cvtColor(img1, cv2.COLOR_RGB2GRAY)
-
-    # find ROIs in the frame
-    rois = objDetect.ROIfind(img)
-    mask, centroids, bboxes, circles, targetRate = rois.apply()
-
-    # tracking and updating
-    t.addNextFrameFeatures(mask, centroids, bboxes, circles, targetRate)
-    t.predictNewLocations()
-    t.detectionToTracksAssignment()
-    t.updateTracks()
-    t.createNewTracks()
-    t.showTracks()
