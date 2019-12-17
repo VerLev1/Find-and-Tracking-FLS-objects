@@ -61,16 +61,6 @@ class ROIfind:
         d = int(0.5 * (echo_sz[0] - bg_sz[0]))
         echo_map = echo_map[d:echo_sz[0] - d, d:echo_sz[1] - d]
 
-        '''
-        for x in range(bg_out-1, cols1-bg_out-1):
-            for y in range(bg_out-1, rows1-bg_out-1):
-
-                out_sum = I[y-bg_out,x-bg_out] -I[y+bg_out,x-bg_out] +I[y+bg_out,x+bg_out] -I[y-bg_out,x+bg_out]
-                in_sum = I[y-bg_in,x-bg_in] -I[y+bg_in,x-bg_in] +I[y+bg_in,x+bg_in] -I[y-bg_in,x+bg_in]
-                bg_map[y,x] = out_sum-in_sum
-                echo_map[y,x] = I[y-echo_sz,x-echo_sz] -I[y+echo_sz,x-echo_sz] +I[y+echo_sz,x+echo_sz] -I[y-echo_sz,x+echo_sz]
-        '''
-
         # normalizing:
         bg_map = bg_map / ((bg_out ** 2) - (bg_in ** 2))
         echo_map = echo_map / (echo ** 2)
@@ -88,6 +78,12 @@ class ROIfind:
         rows, cols = self.img.shape
         lastLine = np.array(self.img[rows - 1, :])
         l = np.where(lastLine > 0)
+        #if the last line is empty:
+        i = 2
+        while not l[0]: #while l is empty
+            lastLine = np.array(self.img[rows - i, :])
+            l = np.where(lastLine > 0)
+            i=i+1
         l = l[0]
         # l=np.array(l)
         sz = l.shape
