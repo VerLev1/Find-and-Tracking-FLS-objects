@@ -23,7 +23,6 @@ for i in range(i1, i2):
 
     # cleaning by tracking
     t.add_next_frame_features(img1, mask, centroids, bboxes, tiny_masks)
-    # t.predictNewLocations()
     t.detection_to_tracks_assignment()
     t.update_tracks()
     t.create_new_tracks()
