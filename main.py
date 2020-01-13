@@ -8,8 +8,9 @@ import tracking
 # t1 = time.time()
 
 t = tracking.Tracking()
-i1 = 250; i2 = 262
-for i in range(i1, i2):
+i1=0
+for i in range(250, 262):
+    i1=i1+1
     # reading the frame
     name = 'images/Try' + str(i) + '.jpg'
     # name = 'images/Swimmer/Test' + str(i) + '.jpg'
@@ -28,6 +29,6 @@ for i in range(i1, i2):
     t.create_new_tracks()
 #     t.show_tracks()
 # plt.show()
-t.return_circles(i2-i1+1) # this makes the list to return
+t.return_circles(i1) # this makes the list to return
 t.show_circles()
 # e = time.time()-t1
