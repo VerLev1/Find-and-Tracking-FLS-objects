@@ -32,4 +32,3 @@ for i in range(i1, i2):
 t.return_circles(i2-i1+1) # this makes the list to return
 t.show_circles()
 # e = time.time()-t1
-a = 2
